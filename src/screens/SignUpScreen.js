@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from 'react'
 import {
   View,
   Text,
@@ -14,18 +14,20 @@ import { LinearGradient } from "expo-linear-gradient";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
 import * as Animatable from "react-native-animatable";
+import { firebase } from '../config/Firebase'
 
 const SignUpScreen = ({ navigation }) => {
   const [data, setData] = React.useState({
-    email: "",
-    password: "",
-    confirm_password: "",
-    check_textInputChange: false,
     secureTextEntry: true,
     confirm_secureTextEntry: true,
   });
 
-  const textInputChange = (val) => {
+  const [fullName, setFullName] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
+
+ /*  const textInputChange = (val) => {
     if (val.length !== 0) {
       setData({
         ...data,
@@ -39,21 +41,23 @@ const SignUpScreen = ({ navigation }) => {
         check_textInputChange: false,
       });
     }
+  }; */
+
+ /*  const handleFullnameChange = (text) => {
+    setFullName({text})
   };
 
-  const handlePasswordChange = (val) => {
-    setData({
-      ...data,
-      confirm_password: val,
-    });
+  const handleEmailChange = (text) => {
+    setEmail({text})
   };
 
-  const handleConfirmPasswordChange = (val) => {
-    setData({
-      ...data,
-      password: val,
-    });
+  const handlePasswordChange = (text) => {
+    setPassword({text})
   };
+
+  const handleConfirmPasswordChange = (text) => {
+    setConfirmPassword({text})
+  }; */
 
   const updateSecureTextEntry = () => {
     setData({
@@ -68,6 +72,39 @@ const SignUpScreen = ({ navigation }) => {
       confirm_secureTextEntry: !data.confirm_secureTextEntry,
     });
   };
+
+  const onRegisterPress = () => {
+    if (data.password !== data.confirm_password) {
+        alert("Passwords don't match.")
+        return
+    }
+    firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then((response) => {
+            const uid = response.user.uid
+            const data = {
+                id: uid,
+                email: email,
+                fullName,
+            };
+            const usersRef = firebase.firestore().collection('users')
+            usersRef
+                .doc(uid)
+                .set(data)
+                .then(() => {
+                    navigation.navigate('Categories', {user: data})
+                })
+                .catch((error) => {
+                    alert(error)
+                });
+        })
+        .catch((error) => {
+            alert(error)
+    });
+}
+
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#009387" barStyle="light-content" />
@@ -75,15 +112,15 @@ const SignUpScreen = ({ navigation }) => {
         <Text style={styles.text_header}>Register Now!</Text>
       </View>
       <Animatable.View style={styles.footer} animation="fadeInUpBig">
-        <Text style={styles.text_footer}>Email</Text>
+        <Text style={styles.text_footer}>Name</Text>
         <View style={styles.action}>
           <FontAwesome name="user-o" color="#05375a" size={20} />
           <TextInput
-            placeholder="Your Email"
+            placeholder="Your Full Name"
             style={styles.textInput}
             autoCapitalize="none"
-            keyboardType = 'email-address'
-            onChangeText={(val) => textInputChange(val)}
+            onChangeText={(text) => setFullName(text)}
+            value={fullName}
           />
           {data.check_textInputChange ? (
             <Animatable.View animation="bounceIn">
@@ -91,6 +128,26 @@ const SignUpScreen = ({ navigation }) => {
             </Animatable.View>
           ) : null}
         </View>
+
+        <Text style={[styles.text_footer, { marginTop: 35 }]}>Email</Text>
+        <View style={styles.action}>
+          <FontAwesome name="user-o" color="#05375a" size={20} />
+          <TextInput
+            placeholder="Your Email"
+            style={styles.textInput}
+            autoCapitalize="none"
+            underlineColorAndroid="transparent"
+            value={email}
+            keyboardType = 'email-address'
+            onChangeText={(text) => setEmail(text)}
+          />
+          {data.check_textInputChange ? (
+            <Animatable.View animation="bounceIn">
+              <Feather name="check-circle" color="green" size={20} />
+            </Animatable.View>
+          ) : null}
+        </View>
+
         <Text style={[styles.text_footer, { marginTop: 35 }]}>Password</Text>
         <View style={styles.action}>
           <Feather name="lock" color="#05375a" size={20} />
@@ -99,7 +156,9 @@ const SignUpScreen = ({ navigation }) => {
             secureTextEntry={data.secureTextEntry ? true : false}
             style={styles.textInput}
             autoCapitalize="none"
-            onChangeText={(val) => handlePasswordChange(val)}
+            value={password}
+            underlineColorAndroid="transparent"
+            onChangeText={(text) => setPassword(text)}
           />
           <TouchableOpacity onPress={updateSecureTextEntry}>
             {data.secureTextEntry ? (
@@ -118,13 +177,15 @@ const SignUpScreen = ({ navigation }) => {
           <Feather name="lock" color="#05375a" size={20} />
           <TextInput
             placeholder="Confirm Your Password"
+            underlineColorAndroid="transparent"
             secureTextEntry={data.confirm_secureTextEntry ? true : false}
             style={styles.textInput}
+            value={confirmPassword}
             autoCapitalize="none"
-            onChangeText={(val) => handleConfirmPasswordChange(val)}
+            onChangeText={(text) => setConfirmPassword(text)}
           />
           <TouchableOpacity onPress={updateConfirmSecureTextEntry}>
-            {data.secureTextEntry ? (
+            {data.confirm_secureTextEntry ? (
               <Feather name="eye-off" color="grey" size={20} />
             ) : (
               <Feather name="eye" color="grey" size={20} />
@@ -133,7 +194,11 @@ const SignUpScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.button}>
-          <LinearGradient colors={["#b83d0f", "#fa638c"]} style={styles.signIn}>
+        <TouchableOpacity
+                    style={styles.signIn}
+                    onPress={() => onRegisterPress()}
+                >
+                  <LinearGradient colors={["#b83d0f", "#fa638c"]} style={styles.signIn}>
             <Text
               style={[
                 styles.textSign,
@@ -146,8 +211,12 @@ const SignUpScreen = ({ navigation }) => {
             </Text>
           </LinearGradient>
 
+                </TouchableOpacity>
+          
+
+
           <TouchableOpacity
-            onPress={() => navigation.navigate("DrawerNavigator")}
+            onPress={() => navigation.navigate("SignInScreen")}
             style={[
               styles.signIn,
               {

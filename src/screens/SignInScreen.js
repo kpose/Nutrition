@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Dimensions,
 } from "react-native";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { LinearGradient } from "expo-linear-gradient";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
@@ -52,6 +53,12 @@ const SignInScreen = ({ navigation }) => {
       secureTextEntry: !data.secureTextEntry,
     });
   };
+
+
+  const onLoginPress = () => {
+  }
+
+  
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#ba9634" barStyle="light-content" />
@@ -94,8 +101,13 @@ const SignInScreen = ({ navigation }) => {
             )}
           </TouchableOpacity>
         </View>
+
         <View style={styles.button}>
-          <LinearGradient colors={["#b83d0f", "#fa638c"]} style={styles.signIn}>
+        <TouchableOpacity
+                    style={styles.signIn}
+                    onPress={() => onLoginPress()}
+                >
+                  <LinearGradient colors={["#b83d0f", "#fa638c"]} style={styles.signIn}>
             <Text
               style={[
                 styles.textSign,
@@ -107,6 +119,9 @@ const SignInScreen = ({ navigation }) => {
               Sign In
             </Text>
           </LinearGradient>
+
+                </TouchableOpacity>
+          
 
           <TouchableOpacity
             onPress={() => navigation.navigate("SignUpScreen")}

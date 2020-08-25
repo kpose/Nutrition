@@ -71,7 +71,7 @@ const HomeStackScreen = ({navigation}) => {
 }
 
 
-const RootNavigator = ({navigation}) => {
+export const AuthNavigator = ({navigation}) => {
   return (
     <WelcomeStackScreen.Navigator screenOptions={{
       headerShown: false
@@ -81,7 +81,7 @@ const RootNavigator = ({navigation}) => {
       <WelcomeStackScreen.Screen name="SplashScreen" component={SplashScreen} />
       <WelcomeStackScreen.Screen name="SignInScreen" component={SignInScreen} />
       <WelcomeStackScreen.Screen name="SignUpScreen" component={SignUpScreen} />
-      <WelcomeStackScreen.Screen name="DrawerNavigator" component={DrawerNavigator} />
+      {/* <WelcomeStackScreen.Screen name="DrawerNavigator" component={DrawerNavigator} /> */}
   </WelcomeStackScreen.Navigator>
   );
 }
@@ -115,7 +115,7 @@ const NutritionStackScreen = ({navigation}) => {
 
 //make categories and search stacks
 
-const DrawerNavigator = () => {
+export const DrawerNavigator = () => {
   return (
     <Drawer.Navigator drawerContent = {props => <DrawerContent {...props} />}>
         <Drawer.Screen name="HomeStackScreen" component={HomeStackScreen} options = {{
@@ -130,4 +130,4 @@ const DrawerNavigator = () => {
 
 
 
-export default RootNavigator;
+export default { AuthNavigator, DrawerNavigator };
