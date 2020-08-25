@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -10,100 +10,52 @@ import {
   StyleSheet,
   Dimensions,
 } from "react-native";
+import { AuthContext } from '../navigation/AuthProvider';
 import { LinearGradient } from "expo-linear-gradient";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
 import * as Animatable from "react-native-animatable";
-import { firebase } from '../config/Firebase'
+import { firebase } from "../config/Firebase";
 
 const SignUpScreen = ({ navigation }) => {
-  const [data, setData] = React.useState({
-    secureTextEntry: true,
-    confirm_secureTextEntry: true,
-  });
 
-  const [fullName, setFullName] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
- /*  const textInputChange = (val) => {
-    if (val.length !== 0) {
-      setData({
-        ...data,
-        email: val,
-        check_textInputChange: true,
-      });
-    } else {
-      setData({
-        ...data,
-        email: val,
-        check_textInputChange: false,
-      });
-    }
-  }; */
-
- /*  const handleFullnameChange = (text) => {
-    setFullName({text})
-  };
-
-  const handleEmailChange = (text) => {
-    setEmail({text})
-  };
-
-  const handlePasswordChange = (text) => {
-    setPassword({text})
-  };
-
-  const handleConfirmPasswordChange = (text) => {
-    setConfirmPassword({text})
-  }; */
-
-  const updateSecureTextEntry = () => {
-    setData({
-      ...data,
-      secureTextEntry: !data.secureTextEntry,
-    });
-  };
-
-  const updateConfirmSecureTextEntry = () => {
-    setData({
-      ...data,
-      confirm_secureTextEntry: !data.confirm_secureTextEntry,
-    });
-  };
+  const { register } = useContext(AuthContext);
 
   const onRegisterPress = () => {
-    if (data.password !== data.confirm_password) {
-        alert("Passwords don't match.")
-        return
+    if (password !== confirm_password) {
+      alert("Passwords don't match.");
+      return;
     }
     firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password)
-        .then((response) => {
-            const uid = response.user.uid
-            const data = {
-                id: uid,
-                email: email,
-                fullName,
-            };
-            const usersRef = firebase.firestore().collection('users')
-            usersRef
-                .doc(uid)
-                .set(data)
-                .then(() => {
-                    navigation.navigate('Categories', {user: data})
-                })
-                .catch((error) => {
-                    alert(error)
-                });
-        })
-        .catch((error) => {
-            alert(error)
-    });
-}
-
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then((response) => {
+        const uid = response.user.uid;
+        const data = {
+          id: uid,
+          email: email,
+          fullName,
+        };
+        const usersRef = firebase.firestore().collection("users");
+        usersRef
+          .doc(uid)
+          .set(data)
+          .then(() => {
+            navigation.navigate("Categories", { user: data });
+          })
+          .catch((error) => {
+            alert(error);
+          });
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -112,21 +64,16 @@ const SignUpScreen = ({ navigation }) => {
         <Text style={styles.text_header}>Register Now!</Text>
       </View>
       <Animatable.View style={styles.footer} animation="fadeInUpBig">
-        <Text style={styles.text_footer}>Name</Text>
+        <Text style={styles.text_footer}>Username</Text>
         <View style={styles.action}>
           <FontAwesome name="user-o" color="#05375a" size={20} />
           <TextInput
-            placeholder="Your Full Name"
+            placeholder="Your Username"
             style={styles.textInput}
             autoCapitalize="none"
-            onChangeText={(text) => setFullName(text)}
-            value={fullName}
+            value={username}
+            onChangeText={username => setUsername(username)}
           />
-          {data.check_textInputChange ? (
-            <Animatable.View animation="bounceIn">
-              <Feather name="check-circle" color="green" size={20} />
-            </Animatable.View>
-          ) : null}
         </View>
 
         <Text style={[styles.text_footer, { marginTop: 35 }]}>Email</Text>
@@ -134,18 +81,15 @@ const SignUpScreen = ({ navigation }) => {
           <FontAwesome name="user-o" color="#05375a" size={20} />
           <TextInput
             placeholder="Your Email"
+            value={email}
             style={styles.textInput}
+            onChangeText={userEmail => setEmail(userEmail)}
             autoCapitalize="none"
             underlineColorAndroid="transparent"
             value={email}
-            keyboardType = 'email-address'
-            onChangeText={(text) => setEmail(text)}
+            autoCorrect={false}
+            keyboardType="email-address"
           />
-          {data.check_textInputChange ? (
-            <Animatable.View animation="bounceIn">
-              <Feather name="check-circle" color="green" size={20} />
-            </Animatable.View>
-          ) : null}
         </View>
 
         <Text style={[styles.text_footer, { marginTop: 35 }]}>Password</Text>
@@ -153,20 +97,13 @@ const SignUpScreen = ({ navigation }) => {
           <Feather name="lock" color="#05375a" size={20} />
           <TextInput
             placeholder="Your Password"
-            secureTextEntry={data.secureTextEntry ? true : false}
             style={styles.textInput}
             autoCapitalize="none"
+            secureTextEntry={true}
             value={password}
+            onChangeText={userPassword => setPassword(userPassword)}
             underlineColorAndroid="transparent"
-            onChangeText={(text) => setPassword(text)}
           />
-          <TouchableOpacity onPress={updateSecureTextEntry}>
-            {data.secureTextEntry ? (
-              <Feather name="eye-off" color="grey" size={20} />
-            ) : (
-              <Feather name="eye" color="grey" size={20} />
-            )}
-          </TouchableOpacity>
         </View>
 
         <Text style={[styles.text_footer, { marginTop: 35 }]}>
@@ -178,42 +115,34 @@ const SignUpScreen = ({ navigation }) => {
           <TextInput
             placeholder="Confirm Your Password"
             underlineColorAndroid="transparent"
-            secureTextEntry={data.confirm_secureTextEntry ? true : false}
             style={styles.textInput}
             value={confirmPassword}
             autoCapitalize="none"
-            onChangeText={(text) => setConfirmPassword(text)}
+            onChangeText={userConfirmPassword => setConfirmPassword(userConfirmPassword)}
           />
-          <TouchableOpacity onPress={updateConfirmSecureTextEntry}>
-            {data.confirm_secureTextEntry ? (
-              <Feather name="eye-off" color="grey" size={20} />
-            ) : (
-              <Feather name="eye" color="grey" size={20} />
-            )}
-          </TouchableOpacity>
         </View>
 
         <View style={styles.button}>
-        <TouchableOpacity
-                    style={styles.signIn}
-                    onPress={() => onRegisterPress()}
-                >
-                  <LinearGradient colors={["#b83d0f", "#fa638c"]} style={styles.signIn}>
-            <Text
-              style={[
-                styles.textSign,
-                {
-                  color: "#fff",
-                },
-              ]}
+          <TouchableOpacity
+            style={styles.signIn}
+            onPress={() => register(email, password)}
+          >
+            <LinearGradient
+              colors={["#b83d0f", "#fa638c"]}
+              style={styles.signIn}
             >
-              Sign Up
-            </Text>
-          </LinearGradient>
-
-                </TouchableOpacity>
-          
-
+              <Text
+                style={[
+                  styles.textSign,
+                  {
+                    color: "#fff",
+                  },
+                ]}
+              >
+                Sign Up
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => navigation.navigate("SignInScreen")}
@@ -238,7 +167,7 @@ const SignUpScreen = ({ navigation }) => {
               Sign In
             </Text>
           </TouchableOpacity>
-        </View> 
+        </View>
       </Animatable.View>
     </View>
   );
