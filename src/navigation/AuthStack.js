@@ -16,7 +16,8 @@ const Stack = createStackNavigator();
 const AuthStack = ({navigation}) => {
     return (
       <Stack.Navigator screenOptions={{
-        headerShown: false
+        headerShown: false,
+        gestureEnabled: false,
       
         
       }} >

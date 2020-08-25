@@ -16,22 +16,22 @@ export const AuthProvider = ({ children }) => {
           login: async (email, password) => {
             try {
               await firebase.auth().signInWithEmailAndPassword(email, password);
-            } catch (e) {
-              console.log(e);
+            } catch (error) {
+              alert(error)
             }
           },
           register: async (email, password) => {
             try {
               await firebase.auth().createUserWithEmailAndPassword(email, password);
-            } catch (e) {
-              console.log(e);
+            } catch (error) {
+              alert(error)
             }
           },
           logout: async () => {
             try {
               await firebase.auth().signOut();
-            } catch (e) {
-              console.error(e);
+            } catch (error) {
+              alert(error)
             }
           }
         }}

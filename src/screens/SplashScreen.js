@@ -12,7 +12,9 @@ import * as Animatable from "react-native-animatable";
 import LottieView from 'lottie-react-native';
 
 
-const cookingAnimation = require('../../assets/chef.json')
+const chef = require('../../assets/chef.json');
+const cooking = require('../../assets/cooking.json')
+const boiling = require('../../assets/boiling.json')
 
 const SplashScreen = ({ navigation }) => {
   return (
@@ -26,7 +28,7 @@ const SplashScreen = ({ navigation }) => {
           resizeMode="stretch"
         >
         <LottieView
-        source={cookingAnimation}
+        source={chef}
         autoPlay
         
         resizeMode="cover"
@@ -38,6 +40,12 @@ const SplashScreen = ({ navigation }) => {
       <Animatable.View style={styles.footer} animation="fadeInUpBig">
         <Text style={styles.title}>BOUNDLESS!</Text>
         <Text style={styles.text}>MULTI-SERVCES SOLUTIONS NIGETIA LTD</Text>
+        <LottieView
+        source={cooking}
+        autoPlay
+        
+        
+      />
         <View style={styles.button}>
           <TouchableOpacity onPress={() => navigation.navigate("SignInScreen")}>
             <LinearGradient

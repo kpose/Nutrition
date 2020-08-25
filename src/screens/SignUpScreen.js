@@ -8,6 +8,7 @@ import {
   Platform,
   Image,
   StyleSheet,
+  KeyboardAvoidingView,
   Dimensions,
 } from "react-native";
 import { AuthContext } from '../navigation/AuthProvider';
@@ -26,36 +27,7 @@ const SignUpScreen = ({ navigation }) => {
 
   const { register } = useContext(AuthContext);
 
-  const onRegisterPress = () => {
-    if (password !== confirm_password) {
-      alert("Passwords don't match.");
-      return;
-    }
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then((response) => {
-        const uid = response.user.uid;
-        const data = {
-          id: uid,
-          email: email,
-          fullName,
-        };
-        const usersRef = firebase.firestore().collection("users");
-        usersRef
-          .doc(uid)
-          .set(data)
-          .then(() => {
-            navigation.navigate("Categories", { user: data });
-          })
-          .catch((error) => {
-            alert(error);
-          });
-      })
-      .catch((error) => {
-        alert(error);
-      });
-  };
+  
 
   return (
     <View style={styles.container}>

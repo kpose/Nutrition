@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useContext } from 'react';
 import { StyleSheet, View } from "react-native";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import {
@@ -12,9 +12,11 @@ import {
   Switch,
 } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { AuthContext } from '../navigation/AuthProvider';
 
 export function DrawerContent(props) {
 
+  const { user, logout } = useContext(AuthContext);
     const [isDarkTheme, setIsDarkTheme] = React.useState(false);
 
     const toggleTheme = () => {
@@ -115,9 +117,7 @@ export function DrawerContent(props) {
             <Icon name="exit-to-app" color={color} size={size} />
           )}
           label="Sign Out"
-          onPress={() => {
-            signOut();
-          }}
+          onPress={() => logout()}
         />
       </Drawer.Section>
     </View>
