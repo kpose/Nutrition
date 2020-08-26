@@ -1,10 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button,TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Button,TouchableOpacity, Dimensions} from 'react-native';
 import styled from 'styled-components';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-
+const screenWidth = Math.round(Dimensions.get('window').width)/2;
+const screenHeight = Math.round(Dimensions.get('window').height)/3;
 
 function Recipe({ recipe }) {
   const navigation = useNavigation();

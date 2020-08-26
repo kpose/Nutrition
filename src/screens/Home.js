@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,20 +7,22 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { fetchRecipes } from '../redux/actions/recipeActions';
+import RecipeList from '../components/RecipeList'
+import Loading from '../components/Loading'
 import  Recipe  from '../components/Recipe';
 import styled from 'styled-components';
 
 
 
 const numOfColumns = 2;
-const Home = ({ loading, hasErrors, recipes, dispatch }) => {
-  useEffect(() => {
-    dispatch(fetchRecipes());
-  }, [dispatch]);
+const Home = () => {
+  const url = `https://api.spoonacular.com/recipes/random?number=50&apiKey=bb4ffe1b2bfb4f498ad3fdc01de73ba5`
+  const [recipes, setRecipes] = useState([])
+  const [loading, setLoading] = useState(true)
 
   //const extractKey = ({ id }) => id;
 
-  const renderRecipes = ({ item }) => {
+  /* const renderRecipes = ({ item }) => {
     if (loading) {
       return  <ActivityIndicator size="large" color="#00ff00" />
     } else if (hasErrors) {
@@ -28,10 +30,21 @@ const Home = ({ loading, hasErrors, recipes, dispatch }) => {
     } else {
       return <Recipe key={item.id} recipe={item} />;
     }
-  };
+  }; */
+
+
+  const fetchRecipes = async () => {
+    const recipeData = await fetch(url)
+    const { recipes } = await recipeData.json()
+    setRecipes(recipes)
+    setLoading(false)
+  }
+  useEffect(() => {
+    fetchRecipes()
+  }, [])
 
   return (
-    <Container>
+   /*  <Container>
       <FlatList
         data={recipes}
         renderItem = {renderRecipes}
@@ -39,18 +52,24 @@ const Home = ({ loading, hasErrors, recipes, dispatch }) => {
         numColumns={numOfColumns}
         showsVerticalScrollIndicator={false}
       />
-    </Container>
+    </Container> */
+
+    <Container>
+      {loading ? <Loading></Loading> : <RecipeList recipes={recipes} />}
+    </Container> 
+       
+    
   );
 };
 
 
-const mapStateToProps = (state) => ({
+/* const mapStateToProps = (state) => ({
   loading: state.recipes.loading,
   recipes: state.recipes.recipes,
   hasErrors: state.recipes.hasErrors,
-});
+}); */
 
-export default connect(mapStateToProps)(Home);
+export default Home;
 
 
 const styles = StyleSheet.create({
