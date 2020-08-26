@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -10,22 +10,48 @@ import {
   StyleSheet,
   Dimensions,
 } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { LinearGradient } from "expo-linear-gradient";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
 import * as Animatable from "react-native-animatable";
-import { AuthContext } from "../navigation/AuthProvider";
 
 const SignInScreen = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [textInput, setTextInput] = useState(false)
-  const [secureTextEntry, setSecureTextEntry] = useState(true)
+  const [data, setData] = React.useState({
+    email: "",
+    password: "",
+    check_textInputChange: false,
+    secureTextEntry: true,
+  });
 
-  const { login } = useContext(AuthContext);
+  const textInputChange = (val) => {
+    if (val.length !== 0) {
+      setData({
+        ...data,
+        email: val,
+        check_textInputChange: true,
+      });
+    } else {
+      setData({
+        ...data,
+        email: val,
+        check_textInputChange: false,
+      });
+    }
+  };
 
+  const handlePasswordChange = (val) => {
+    setData({
+      ...data,
+      password: val,
+    });
+  };
 
+  const updateSecureTextEntry = () => {
+    setData({
+      ...data,
+      secureTextEntry: !data.secureTextEntry,
+    });
+  };
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#ba9634" barStyle="light-content" />
@@ -40,50 +66,47 @@ const SignInScreen = ({ navigation }) => {
             placeholder="Your Email"
             style={styles.textInput}
             autoCapitalize="none"
-            value={email}
-            keyboardType="email-address"
-            autoCorrect={false}
-            onChangeText={(userEmail) => setEmail(userEmail)}
+            keyboardType = 'email-address'
+            onChangeText={(val) => textInputChange(val)}
           />
-          <Feather name="check-circle" color="green" size={20} />
+          {data.check_textInputChange ? (
+            <Animatable.View animation="bounceIn">
+              <Feather name="check-circle" color="green" size={20} />
+            </Animatable.View>
+          ) : null}
         </View>
-
+        
         <Text style={[styles.text_footer, { marginTop: 35 }]}>Password</Text>
         <View style={styles.action}>
           <Feather name="lock" color="#05375a" size={20} />
           <TextInput
             placeholder="Your Password"
+            secureTextEntry={data.secureTextEntry ? true : false}
             style={styles.textInput}
             autoCapitalize="none"
-            value={password}
-            secureTextEntry={true}
-            onChangeText={(userPassword) => setPassword(userPassword)}
+            onChangeText={(val) => handlePasswordChange(val)}
           />
-
-          <Feather name="eye-off" color="grey" size={20} />
-        </View>
-
-        <View style={styles.button}>
-          <TouchableOpacity
-            style={styles.signIn}
-            onPress={() => login(email, password)}
-          >
-            <LinearGradient
-              colors={["#b83d0f", "#fa638c"]}
-              style={styles.signIn}
-            >
-              <Text
-                style={[
-                  styles.textSign,
-                  {
-                    color: "#fff",
-                  },
-                ]}
-              >
-                Sign In
-              </Text>
-            </LinearGradient>
+          <TouchableOpacity onPress={updateSecureTextEntry}>
+            {data.secureTextEntry ? (
+              <Feather name="eye-off" color="grey" size={20} />
+            ) : (
+              <Feather name="eye" color="grey" size={20} />
+            )}
           </TouchableOpacity>
+        </View>
+        <View style={styles.button}>
+          <LinearGradient colors={["#b83d0f", "#fa638c"]} style={styles.signIn}>
+            <Text
+              style={[
+                styles.textSign,
+                {
+                  color: "#fff",
+                },
+              ]}
+            >
+              Sign In
+            </Text>
+          </LinearGradient>
 
           <TouchableOpacity
             onPress={() => navigation.navigate("SignUpScreen")}
