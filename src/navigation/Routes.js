@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer} from '@react-navigation/native';
 import AuthStack from './AuthStack';
 import HomeStack from './HomeStack';
 import { AuthContext } from './AuthProvider';

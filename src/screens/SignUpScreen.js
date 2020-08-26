@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import {
   KeyboardAvoidingView,
   Dimensions,
 } from "react-native";
-import { AuthContext } from '../navigation/AuthProvider';
+import { AuthContext } from "../navigation/AuthProvider";
 import { LinearGradient } from "expo-linear-gradient";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
@@ -19,15 +19,12 @@ import * as Animatable from "react-native-animatable";
 import { firebase } from "../config/Firebase";
 
 const SignUpScreen = ({ navigation }) => {
-
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const { register } = useContext(AuthContext);
-
-  
 
   return (
     <View style={styles.container}>
@@ -44,7 +41,7 @@ const SignUpScreen = ({ navigation }) => {
             style={styles.textInput}
             autoCapitalize="none"
             value={username}
-            onChangeText={username => setUsername(username)}
+            onChangeText={(username) => setUsername(username)}
           />
         </View>
 
@@ -55,7 +52,7 @@ const SignUpScreen = ({ navigation }) => {
             placeholder="Your Email"
             value={email}
             style={styles.textInput}
-            onChangeText={userEmail => setEmail(userEmail)}
+            onChangeText={(userEmail) => setEmail(userEmail)}
             autoCapitalize="none"
             underlineColorAndroid="transparent"
             value={email}
@@ -73,7 +70,7 @@ const SignUpScreen = ({ navigation }) => {
             autoCapitalize="none"
             secureTextEntry={true}
             value={password}
-            onChangeText={userPassword => setPassword(userPassword)}
+            onChangeText={(userPassword) => setPassword(userPassword)}
             underlineColorAndroid="transparent"
           />
         </View>
@@ -90,7 +87,9 @@ const SignUpScreen = ({ navigation }) => {
             style={styles.textInput}
             value={confirmPassword}
             autoCapitalize="none"
-            onChangeText={userConfirmPassword => setConfirmPassword(userConfirmPassword)}
+            onChangeText={(userConfirmPassword) =>
+              setConfirmPassword(userConfirmPassword)
+            }
           />
         </View>
 
