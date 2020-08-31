@@ -1,52 +1,63 @@
-import React from 'react';
-import { StyleSheet, Text, View, Button,TouchableOpacity, Dimensions} from 'react-native';
-import styled from 'styled-components';
-import { Feather } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import React from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
+import styled from "styled-components";
+import { Feather } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
-const screenWidth = Math.round(Dimensions.get('window').width)/2;
-const screenHeight = Math.round(Dimensions.get('window').height)/3;
+const screenWidth = Math.round(Dimensions.get("window").width);
+const screenHeight = Math.round(Dimensions.get("window").height);
+
+let screenWidthh = screenWidth / 2;
 
 function Recipe({ recipe }) {
   const navigation = useNavigation();
   return (
     <Container>
-      <TouchableOpacity 
-      onPress={() => navigation.navigate('RecipeDetailsScreen', {recipe})}
+      <TouchableOpacity
+        onPress={() => navigation.navigate("RecipeDetailsScreen", { recipe })}
       >
         <Cover>
-        <Image source={{ uri: recipe.image }} />
-      </Cover>
+          <Image source={{ uri: recipe.image }} />
+        </Cover>
       </TouchableOpacity>
 
       <Content>
         <Title>{recipe.title}</Title>
-        <PriceCaption>
-          <Feather name="clock" size={18} color="green" />
-          {recipe.readyInMinutes} mins
-        </PriceCaption>
       </Content>
+
+      <Contents>
+        <Feather name="clock" size={16} color="green" />
+
+        <PriceCaption>{recipe.readyInMinutes} mins</PriceCaption>
+      </Contents>
+
     </Container>
   );
-};
+}
 
 export default Recipe;
 
 const Container = styled.View`
   background: #fff;
-  height: 200px;
-  width: 150px;
+  height: 250px;
+  width: 180px;
   border-radius: 14px;
-  margin: 18px;
+  margin: 10px;
   margin-top: 20px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 `;
 
 const Cover = styled.View`
   width: 100%;
-  height: 120px;
-  border-top-left-radius: 14px;
-  border-top-right-radius: 14px;
+  height: 150px;
+  border-radius: 14px;
   overflow: hidden;
 `;
 
@@ -62,12 +73,17 @@ const Content = styled.View`
   height: 60px;
 `;
 
-const Title = styled.Text`
-  color: #3c4560;
-  font-size: 18px;
-  font-weight: 600;
+const Contents = styled.View`
+  flex-direction: row;
+
   align-items: center;
   justify-content: center;
+`;
+
+const Title = styled.Text`
+  color: #3c4560;
+  font-size: 16px;
+  font-weight: 800;
 `;
 
 const PriceCaption = styled.Text`

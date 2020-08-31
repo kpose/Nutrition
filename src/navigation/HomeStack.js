@@ -54,7 +54,7 @@ const RecipeStackScreen = ({navigation}) => {
               }}></Icon.Button>
           ),
           headerRight: () => (
-            <Icon.Button name='ios-menu' size ={25}
+            <Icon.Button name='ios-add' size ={25}
               backgroundColor= "#009387" onPress = {() => {
                 navigation.openDrawer()
               }}></Icon.Button>
@@ -62,7 +62,7 @@ const RecipeStackScreen = ({navigation}) => {
         }} />
         <RecipeStack.Screen name="Ingredients" component={Ingredients} />
         <RecipeStack.Screen name="IngredientDetails" component={IngredientDetails} />
-        <RecipeStack.Screen name="RecipeDetailsScreen" component={RecipeDetailsScreen} />
+        <RecipeStack.Screen options={{headerShown: false}} name="RecipeDetailsScreen" component={RecipeDetailsScreen} />
     </RecipeStack.Navigator>
     );
   }

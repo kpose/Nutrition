@@ -1,43 +1,24 @@
-import React from 'react'
-import {
-  StyleSheet,
-  Text,
-  FlatList,
-  ActivityIndicator,
-} from 'react-native';
-import  Recipe  from '../components/Recipe';
-import styled from 'styled-components';
+import React from "react";
+import { StyleSheet, Text, FlatList, ActivityIndicator } from "react-native";
+import Recipe from "../components/Recipe";
+import styled from "styled-components";
 
-export default function RecipeList({recipes}) {
-
-
+export default function RecipeList({ recipes }) {
   const renderRecipes = ({ item }) => {
-    
-      return <Recipe key={item.id} recipe={item} />;
-  
+    return <Recipe key={item.id} recipe={item} />;
   };
-    return (
-      <Container>
+  return (
+    <Container>
       <FlatList
         data={recipes}
-        renderItem = {renderRecipes}
-        keyExtractor = {item =>item.id}
+        renderItem={renderRecipes}
+        keyExtractor={(item) => item.id}
         numColumns={2}
         showsVerticalScrollIndicator={false}
       />
-      </Container>
-    )
+    </Container>
+  );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#ffffff",
-    alignItems: 'center',
-    justifyContent: 'center',
-    
-  },
-});
 
 const Container = styled.SafeAreaView`
   flex: 1;
